@@ -21,7 +21,6 @@ ResumeItNow is a free, open-source resume builder that helps job seekers create 
 - 💳 **100% Free**: No credit card required, no hidden fees
 - 🎨 **Customizable**: Multiple layout options and customizable sections
 - 📱 **Responsive**: Works perfectly on desktop and mobile devices
-- 🔒 **Privacy-Focused**: No sign-up required, data stays in your browser
 - 📤 **Export Options**: Download as PDF, share links, and more
 
 ## 🛠️ Tech Stack
