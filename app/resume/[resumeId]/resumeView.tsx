@@ -246,12 +246,14 @@ export default function ResumeView({
         </CardContent>
       </Card>
 
-      <div id="resume-content">
-        <TemplateComponent 
-          resumeData={resumeData}
-          isEditing={isEditing}
-          updateField={updateField}
-        />
+      <div className='flex justify-self-center max-w-[21cm] bg-white shadow-lg pt-8 print:shadow-none'>
+        <div id="resume-content">
+          <TemplateComponent 
+            resumeData={resumeData}
+            isEditing={isEditing}
+            updateField={updateField}
+            />
+        </div>
       </div>
 
       {/* Print Styles */}

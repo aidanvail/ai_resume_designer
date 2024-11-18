@@ -94,12 +94,12 @@ export function ProfessionalTemplate({ resumeData, isEditing, updateField }: Tem
   };
 
   return (
-    <div className="max-w-[21cm] mx-auto bg-white shadow-lg p-8 pt-0 print:shadow-none">
+    <div className="max-w-[21cm] mx-auto bg-white px-8">
       {/* Personal Details Section */}
       <div className="mb-8">
         <div className="flex justify-between w-full">
           <div className="flex flex-col">
-            <h1 className="text-4xl font-bold text-gray-800 text-center mb-3">
+            <h1 className="text-4xl font-bold text-gray-800 text-center">
               {renderInput({
                 value: resumeData.personalDetails.fullName,
                 onChange: (value) => updateField('personalDetails', null, 'fullName', value),
@@ -183,7 +183,7 @@ export function ProfessionalTemplate({ resumeData, isEditing, updateField }: Tem
             value: resumeData.objective,
             onChange: (value) => updateField('objective', null, 'objective', value),
             multiline: true,
-            className: "text-gray-700 text-sm leading-relaxed",
+            className: "text-gray-700 text-sm leading-relaxed text-justify",
             ariaLabel: "Professional summary"
           })}
         </div>
@@ -238,7 +238,7 @@ export function ProfessionalTemplate({ resumeData, isEditing, updateField }: Tem
                   value: experience.description,
                   onChange: (value) => updateField('workExperience', index, 'description', value),
                   multiline: true,
-                  className: "text-gray-600 text-sm ml-4",
+                  className: "text-gray-600 text-sm ml-4 text-justify",
                   ariaLabel: "Job description"
                 })}
               </div>
@@ -281,7 +281,7 @@ export function ProfessionalTemplate({ resumeData, isEditing, updateField }: Tem
                 value: project.description,
                 onChange: (value) => updateField('projects', index, 'description', value),
                 multiline: true,
-                className: "text-gray-600 text-sm ml-4",
+                className: "text-gray-600 text-sm ml-4 text-justify",
                 ariaLabel: "Project description"
               })}
             </div>

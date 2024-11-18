@@ -100,7 +100,7 @@ export function MinimalTemplate({ resumeData, isEditing, updateField }: Template
   };
 
   return (
-    <div className="max-w-[21cm] mx-auto bg-white shadow-lg p-8 pt-0 print:shadow-none">
+    <div className="max-w-[21cm] mx-auto bg-white px-8">
       {/* Personal Details Section */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 text-center">
@@ -187,7 +187,7 @@ export function MinimalTemplate({ resumeData, isEditing, updateField }: Template
             value: resumeData.objective,
             onChange: (value) => updateField('objective', null, 'objective', value),
             multiline: true,
-            className: "text-gray-700 text-sm leading-relaxed",
+            className: "text-gray-700 text-sm leading-relaxed text-justify",
             ariaLabel: "Professional summary"
           })}
         </div>
@@ -242,7 +242,7 @@ export function MinimalTemplate({ resumeData, isEditing, updateField }: Template
                   value: experience.description,
                   onChange: (value) => updateField('workExperience', index, 'description', value),
                   multiline: true,
-                  className: "text-gray-600 text-sm ml-4",
+                  className: "text-gray-600 text-sm ml-4 text-justify",
                   ariaLabel: "Job description"
                 })}
               </div>
@@ -285,7 +285,7 @@ export function MinimalTemplate({ resumeData, isEditing, updateField }: Template
                 value: project.description,
                 onChange: (value) => updateField('projects', index, 'description', value),
                 multiline: true,
-                className: "text-gray-600 text-sm ml-4",
+                className: "text-gray-600 text-sm ml-4 text-justify",
                 ariaLabel: "Project description"
               })}
             </div>
