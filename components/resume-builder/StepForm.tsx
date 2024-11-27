@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
@@ -31,6 +31,27 @@ export default function StepForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+
+  // Function to get localStorage data for a specific step
+  const getLocalStorageStepData = (step: number) => {
+    try {
+      const data = localStorage.getItem(`resumeitnow_step_${step}`);
+      return data ? JSON.parse(data) : null;
+    } catch (error) {
+      console.error("Error retrieving localStorage data", error);
+      return null;
+    }
+  };
+
+  // Function to clear all localStorage form data
+  const clearLocalStorageData = () => {
+    const localStorageKeysToRemove = [
+      ...steps.map((_, index) => `resumeitnow_step_${index}`),
+      "resumeitnow_name"
+    ];
+
+    localStorageKeysToRemove.forEach(key => localStorage.removeItem(key));
+  };
   
   const {
     register,
@@ -90,6 +111,54 @@ export default function StepForm() {
     }
   });
 
+  useEffect(() => {
+    // Attempt to retrieve and set form data from localStorage for the current step
+    const savedStepData = getLocalStorageStepData(step);
+    
+    if (savedStepData) {
+      // Merge saved data with current form values
+      const currentFormValues = getValues();
+      const mergedData = {
+        ...currentFormValues,
+        ...savedStepData
+      };
+  
+      // Deeply merge nested objects
+      if (savedStepData.personalDetails) {
+        mergedData.personalDetails = {
+          ...currentFormValues.personalDetails,
+          ...savedStepData.personalDetails
+        };
+      }
+  
+      // Set the merged values
+      Object.keys(mergedData).forEach(key => {
+        setValue(key as keyof FormValues, mergedData[key]);
+      });
+    }
+  
+    // Watch for changes and save to localStorage
+    const subscription = watch((formData) => {
+      try {
+        // Ensure we're only saving non-empty data
+        const filteredData = Object.fromEntries(
+          Object.entries(formData).filter(([_, value]) => {
+            if (typeof value === 'object') {
+              return Object.keys(value).length > 0;
+            }
+            return value !== '' && value !== undefined;
+          })
+        );
+  
+        localStorage.setItem(`resumeitnow_step_${step}`, JSON.stringify(filteredData));
+      } catch (error) {
+        console.error("Failed to save form data to localStorage", error);
+      }
+    });
+  
+    return () => subscription.unsubscribe();
+  }, [step, watch, setValue, getValues]);
+
   const onSubmit = async () => {
     if (step < steps.length - 1) {
       setStep(step + 1);
@@ -113,10 +182,9 @@ export default function StepForm() {
 
       // Get all form data
       const completeFormData = getValues();
-      console.log(completeFormData);
       
       await setDoc(docRef, {
-        ...completeFormData, // Use complete form data instead of just step data
+        ...completeFormData,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       });
@@ -127,6 +195,9 @@ export default function StepForm() {
         description: "Resume saved successfully!.. Redirecting to Resume",
         duration: 3000,
       });
+
+      // Clear localStorage after successful submission
+      clearLocalStorageData();
 
       setTimeout(() => {
         router.push(`/resume/${resumeId}`);

@@ -83,3 +83,23 @@ export const jobTitleSchema = z.object({
     { schema: languagesSchema, title: "Languages" },
     { schema: certificationsSchema, title: "Certifications" },
   ];
+
+  // Utility function to save schema to localStorage
+export const saveSchemaToLocalStorage = (key: string, schema: z.ZodObject<any>) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(schema.shape));
+  } catch (error) {
+    console.error("Failed to save schema to localStorage", error);
+  }
+};
+
+// Utility function to retrieve schema from localStorage
+export const getSchemaFromLocalStorage = (key: string) => {
+  try {
+    const savedSchema = localStorage.getItem(key);
+    return savedSchema ? JSON.parse(savedSchema) : null;
+  } catch (error) {
+    console.error("Failed to retrieve schema from localStorage", error);
+    return null;
+  }
+};

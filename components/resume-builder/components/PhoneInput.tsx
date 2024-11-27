@@ -33,6 +33,9 @@ export const PhoneInputComponent = ({ register, errors }: PhoneInputComponentPro
               <SelectItem value="+1">+1 (US)</SelectItem>
               <SelectItem value="+44">+44 (UK)</SelectItem>
               <SelectItem value="+91">+91 (IN)</SelectItem>
+              <SelectItem value="+92">+92 (PAK)</SelectItem>
+              <SelectItem value="+94">+94 (LK)</SelectItem>
+              <SelectItem value="+880">+880 (BD)</SelectItem>
             </SelectContent>
           </Select>
           <Input 
