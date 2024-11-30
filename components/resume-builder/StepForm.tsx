@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
@@ -185,6 +186,7 @@ export default function StepForm() {
       
       await setDoc(docRef, {
         ...completeFormData,
+        ...completeFormData,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       });
@@ -195,6 +197,9 @@ export default function StepForm() {
         description: "Resume saved successfully!.. Redirecting to Resume",
         duration: 3000,
       });
+
+      // Clear localStorage after successful submission
+      clearLocalStorageData();
 
       // Clear localStorage after successful submission
       clearLocalStorageData();
