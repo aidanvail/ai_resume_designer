@@ -146,7 +146,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-muted/50 flex flex-col justify-center items-center">
+      <section className="py-24 bg-muted/50 flex flex-col items-center">
         <div className="container px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">Why Choose ResumeItNow?</h2>
@@ -192,7 +192,7 @@ export default function HomePage() {
       </section>
 
       {/* Templates Preview */}
-      <section ref={templatesRef} className="py-24 scroll-mt-16">
+      <section ref={templatesRef} className="py-24 scroll-mt-16 flex flex-col items-center">
         <div className="container px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">Professional Templates</h2>
@@ -209,7 +209,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-primary text-primary-foreground">
+      <section className="py-24 bg-primary text-primary-foreground flex flex-col items-center">
         <div className="container px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Ready to Create Your Professional Resume?

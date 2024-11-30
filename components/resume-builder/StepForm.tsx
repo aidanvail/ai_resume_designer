@@ -302,8 +302,8 @@ export default function StepForm() {
     <main className="container mx-auto py-10 px-4 md:px-6">
       <div className="max-w-3xl mx-auto">
         {/* Progress bar with step headings */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4 max-md:hidden">
+        <div className="mb-8 max-md:hidden">
+          <div className="flex justify-between items-center mb-4 ">
             {steps.map((stepInfo, index) => (
               <div
                 key={index}
@@ -343,6 +343,18 @@ export default function StepForm() {
               className="absolute top-1/2 transform -translate-y-1/2 h-1 bg-primary rounded transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
+          </div>
+        </div>
+        {/* Progress bar */}
+        <div className="mb-8 hidden max-md:block">
+          <div className="h-2 w-full bg-gray-200 dark:bg-border rounded-full">
+            <div 
+              className="h-full bg-primary rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <div className="mt-2 text-sm text-gray-600 text-center">
+            Step {step + 1} of {steps.length}
           </div>
         </div>
 
