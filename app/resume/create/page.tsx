@@ -26,7 +26,7 @@ export default function ResumeBuilderPage() {
           <AlertTitle>You are not signed in</AlertTitle>
           <AlertDescription className="mt-2">
             If you continue, your resume will not be saved&#40;you can create
-            and download the resume but your resume won't be saved anywhere, so you might lose it.&#41; Sign In to save your resumes and download/edit them any time!
+            and download the resume but your resume won&apos;t be saved anywhere, so you might lose it.&#41; Sign In to save your resumes and download/edit them any time!
           </AlertDescription>
           <Button
             variant="outline"

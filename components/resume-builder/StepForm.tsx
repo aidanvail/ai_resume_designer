@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import React, { useState, useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
@@ -154,7 +153,7 @@ export default function StepForm() {
     if (isInitialLoad) return;
 
     // Use strong typing for watch function
-    const subscription = watch((formData) => {
+    const subscription = watch(() => {
       // Ensure we only save the current step's data
       const currentStepData = { ...getValues() };
       saveFormDataToLocalStorage(currentStepData, step);

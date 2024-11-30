@@ -85,6 +85,8 @@ export const jobTitleSchema = z.object({
   ];
 
   // Utility function to save schema to localStorage
+  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const saveSchemaToLocalStorage = (key: string, schema: z.ZodObject<any>) => {
   try {
     localStorage.setItem(key, JSON.stringify(schema.shape));
