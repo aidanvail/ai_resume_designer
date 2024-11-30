@@ -11,8 +11,11 @@ interface PhoneInputComponentProps {
   };
   
 export const PhoneInputComponent = ({ register, errors }: PhoneInputComponentProps) => {
-    const [countryCode, setCountryCode] = useState("+1");
-    const [phoneNumber, setPhoneNumber] = useState("");
+    const storedData = localStorage.getItem("resumeitnow_form_data");
+    const defaultPhone = storedData ? JSON.parse(storedData)?.formData?.personalDetails?.phone || "" : "";
+    const [defaultCountryCode, phone] = defaultPhone.split(" ");
+    const [countryCode, setCountryCode] = useState(defaultCountryCode || "+91");
+    const [phoneNumber, setPhoneNumber] = useState(phone);
   
     useEffect(() => {
       const fullNumber = `${countryCode} ${phoneNumber}`;
@@ -30,9 +33,12 @@ export const PhoneInputComponent = ({ register, errors }: PhoneInputComponentPro
               <SelectValue>{countryCode}</SelectValue>
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="+91">+91 (IN)</SelectItem>
               <SelectItem value="+1">+1 (US)</SelectItem>
               <SelectItem value="+44">+44 (UK)</SelectItem>
-              <SelectItem value="+91">+91 (IN)</SelectItem>
+              <SelectItem value="+92">+92 (PAK)</SelectItem>
+              <SelectItem value="+94">+94 (LK)</SelectItem>
+              <SelectItem value="+880">+880 (BD)</SelectItem>
             </SelectContent>
           </Select>
           <Input 

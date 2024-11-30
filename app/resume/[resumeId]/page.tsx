@@ -69,7 +69,7 @@ interface ResumeData {
 async function getResumeData(resumeId: string): Promise<ResumeData | null> {
   const session = await getServerSession(authOptions);
   try {
-    const userId = session?.user?.email;
+    const userId = session?.user?.email || "temp_resumes";
     const resumeRef = doc(db, `users/${userId}/resumes/${resumeId}`);
     const resumeSnap = await getDoc(resumeRef);
     
@@ -94,7 +94,7 @@ export default async function Page({
 
   if (!resumeData) {
     return (
-      <div className="p-8 text-center dark:bg-gray-800">
+      <div className="p-8 text-center dark:bg-gray-800 min-h-[80vh]">
         <p className="text-gray-600 dark:text-gray-400">No resume data found</p>
         <p className="text-sm text-gray-500">ID: {resumeId}</p>
         <p className="text-sm text-gray-500">User: {session?.user?.email}</p>

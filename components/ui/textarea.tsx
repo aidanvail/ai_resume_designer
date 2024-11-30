@@ -226,7 +226,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             />
           </TabsContent>
 
-          <TabsContent value="preview">
+          <TabsContent value="preview" className="relative w-full">
             <div
               className="prose min-h-[200px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
               dangerouslySetInnerHTML={{ __html: renderMarkdown(currentText) }}
