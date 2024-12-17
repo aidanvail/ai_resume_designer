@@ -1,14 +1,14 @@
 'use client'
 import { useSession } from 'next-auth/react'
-import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import { db } from '@/lib/firebase'
-import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { FileText, Mail, User, Trash2 } from 'lucide-react'
+import { FileText, Mail, User, Trash2, Plus, ArrowRight } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { Toaster } from "@/components/ui/toaster";
 
@@ -69,10 +69,13 @@ export default function Page() {
       if (!session?.user?.name) return
 
       try {
-        const resumesRef = collection(db, `users/${session.user.email}/resumes`)
-        const resumesSnapshot = await getDocs(resumesRef)
-        
-        const resumeData = resumesSnapshot.docs.map(doc => ({
+        const q = query(
+          collection(db, `users/${session.user.email}/resumes`),
+          where("userId", "==", session.user.email)
+        );
+
+        const querySnapshot = await getDocs(q);
+        const resumeData = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
         })) as Resume[]
@@ -98,92 +101,66 @@ export default function Page() {
   }
 
   return (
-    <div className="container min-h-screen mx-auto px-4 py-8">
-      <div className="grid gap-8 md:grid-cols-[300px_1fr]">
-        {/* Profile Information Card */}
-        <Card className="h-fit">
-          <CardHeader className="text-center">
-            <Avatar className="w-24 h-24 mx-auto mb-4">
-              <AvatarImage src={session.user?.image ?? ''} alt={session.user?.name ?? ''} />
-              <AvatarFallback>
-                {session.user?.name?.charAt(0) ?? 'U'}
-              </AvatarFallback>
-            </Avatar>
-            <CardTitle>{(settings.displayName !== '' ? settings.displayName : session.user?.name)}</CardTitle>
-            <CardDescription>
-              <div className="flex items-center justify-center gap-2">
-                <User className="w-4 h-4" />
-                <span>@{session.user?.name ?? 'username'}</span>
-              </div>
-              <div className="flex items-center justify-center gap-2 mt-2">
-                <Mail className="w-4 h-4" />
-                <span>{session.user?.email}</span>
-              </div>
-            </CardDescription>
-          </CardHeader>
-        </Card>
+    <div className="min-h-screen bg-[#162F44] p-6">
+      <div className="max-w-4xl mx-auto space-y-8">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-white">My Resumes</h1>
+          <p className="text-[#BFBFBF]">Manage and edit your resumes</p>
+        </div>
 
-        {/* Resumes List Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle>My Resumes</CardTitle>
-            <CardDescription>Manage your created resumes</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <Skeleton key={i} className="h-16 w-full" />
-                ))}
-              </div>
-            ) : resumes.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No resumes found. Create your first resume!</p>
-                <Button
-                  className="mt-4"
-                  onClick={() => router.push('/resume/create')}
-                >
-                  Create Resume
-                </Button>
-              </div>
-            ) : (
-              <div className="grid gap-4">
-                {resumes
-                  .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-                  .map((resume) => (
-                    <Card
-                      key={resume.id}
-                      className="hover:bg-accent transition-colors cursor-pointer"
-                    >
-                      <CardHeader>
-                        <div className="flex items-center justify-between" onClick={() => router.push(`/resume/${resume.id}`)}>
-                          <div className="cursor-pointer">
-                            <CardTitle className="text-lg">{resume.id}</CardTitle>
-                            <CardDescription>
-                              Created: {new Date(resume.createdAt).toLocaleDateString()}
-                            </CardDescription>
-                          </div>
-                          <div className="flex items-center">
-                            <FileText className="w-6 h-6 text-muted-foreground mr-2" />
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                deleteResume(resume.id);
-                              }}
-                              className="text-red-500 hover:text-red-700 transition-colors"
-                            >
-                              <Trash2 />
-                            </button>
-                          </div>
-                        </div>
-                      </CardHeader>
-                    </Card>
-                  ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <div className="grid gap-4">
+          <Card className="bg-[#BFBFBF] hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-[#162F44]">
+                <Plus className="h-5 w-5" />
+                Create New Resume
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Button
+                onClick={() => router.push("/resume/create")}
+                className="w-full bg-[#CB3F4A] hover:bg-[#CB3F4A]/90 text-white"
+              >
+                Get Started
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+
+          {resumes.map((resume) => (
+            <Card key={resume.id} className="bg-[#BFBFBF] hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-[#162F44]">
+                  <FileText className="h-5 w-5" />
+                  Resume {resume.id.slice(0, 8)}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <p className="text-[#697782] text-sm">
+                  Last updated: {new Date(resume.updatedAt).toLocaleDateString()}
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => router.push(`/resume/${resume.id}`)}
+                    className="w-full bg-[#CB3F4A] hover:bg-[#CB3F4A]/90 text-white"
+                  >
+                    Edit Resume
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteResume(resume.id);
+                    }}
+                    className="text-red-500 hover:text-red-700 transition-colors"
+                  >
+                    <Trash2 />
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
       <Toaster />
     </div>

@@ -157,7 +157,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             variant="outline"
             size="sm"
             onClick={() => insertMarkdown('**')}
-            className="w-8 h-8 p-0"
+            className="w-8 h-8 p-0 text-white border-[#CB3F4A] hover:bg-[#CB3F4A]/10"
           >
             <Bold className="h-4 w-4" />
           </Button>
@@ -166,7 +166,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             variant="outline"
             size="sm"
             onClick={() => insertMarkdown('- ', false)}
-            className="w-8 h-8 p-0"
+            className="w-8 h-8 p-0 text-white border-[#CB3F4A] hover:bg-[#CB3F4A]/10"
           >
             <List className="h-4 w-4" />
           </Button>
@@ -175,11 +175,11 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         <Tabs defaultValue="edit" onValueChange={setCurrentTab}>
           <div className="flex justify-between">
             <TabsList className="mb-2">
-              <TabsTrigger value="edit" className="flex items-center gap-1">
+              <TabsTrigger value="edit" className="flex items-center gap-1 text-white">
                 <Edit className="h-4 w-4" />
                 Edit
               </TabsTrigger>
-              <TabsTrigger value="preview" className="flex items-center gap-1">
+              <TabsTrigger value="preview" className="flex items-center gap-1 text-white">
                 <Eye className="h-4 w-4" />
                 Preview
               </TabsTrigger>
@@ -189,7 +189,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
                 type="button"
                 variant="secondary"
                 size="sm"
-                className="bg-purple-400 hover:bg-purple-500 transition hover:scale-105"
+                className="bg-[#CB3F4A] hover:bg-[#CB3F4A]/90 text-white transition hover:scale-105"
                 onClick={handleEnhance}
                 disabled={isEnhancing}
               >
@@ -199,7 +199,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
                     Enhancing...
                   </>
                 ) : (
-                  "Enhance with AI"
+                  "Enhance"
                 )}
               </Button>
             )}

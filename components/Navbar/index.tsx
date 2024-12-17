@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import ThemeSwitch from '../ThemeSwitch';
@@ -128,48 +127,15 @@ export default function Navbar() {
   );
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-8">
-            <Link
-              href="/"
-              className="flex items-center space-x-2 font-bold text-2xl hover:opacity-90 transition-opacity"
-            >
-              ResumeItNow
-            </Link>
-          </div>
-          <div className="hidden md:flex md:gap-2">
-              {navLinks.map((link) => (
-                <Button
-                  key={link.href}
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => router.push(link.href)}
-                >
-                  {link.title}
-                </Button>
-              ))}
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex md:items-center md:gap-4">
-              {session ? (
-                <UserMenu />
-              ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => router.push('/signin')}
-                >
-                  Sign In
-                </Button>
-              )}
-            </div>
-            <ThemeSwitch />
-            <MobileMenu />
-          </div>
-        </div>
-      </div>
-    </nav>
+    <div className="fixed top-4 right-4 z-50">
+      {!session ? (
+        <Button
+          onClick={() => signIn('google')}
+          className="bg-[#CB3F4A] hover:bg-[#CB3F4A]/90 text-white"
+        >
+          Sign In
+        </Button>
+      ) : null}
+    </div>
   );
 }

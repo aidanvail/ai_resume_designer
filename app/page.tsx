@@ -1,21 +1,45 @@
 "use client";
-import { useState, useRef, useEffect } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  ArrowRight,
-  Sparkles,
-  CheckCircle2,
-  Layout,
-  Rocket
-} from "lucide-react"
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Layout, Sparkles, Rocket } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from 'next/image';
+import { Badge } from "@/components/ui/badge";
 import { db } from "@/lib/firebase"
 import { doc, getDoc } from "firebase/firestore"
-import Link from "next/link"
-import type { FC } from 'react'
-import Image from 'next/image'
+import type { FC } from 'react';
+
+const TemplateTabs = ({ templates }: { templates: string[] }) => {
+  return (
+    <Tabs defaultValue="modern" className="w-full max-w-3xl">
+      <TabsList className="grid w-full grid-cols-3">
+        {templates.map((template) => (
+          <TabsTrigger key={template} value={template.toLowerCase()}>
+            {template}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+      {templates.map((template) => (
+        <TabsContent key={template} value={template.toLowerCase()}>
+          <Card>
+            <CardContent className="p-6">
+              <div className="aspect-[1366/2739] rounded-lg bg-muted flex items-center justify-center">
+                <Image
+                  src={`/assets/${template}.png`}
+                  alt={template}
+                  width={720}
+                  height={368}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      ))}
+    </Tabs>
+  );
+};
 
 interface ResumeCount {
   count: number
@@ -36,47 +60,24 @@ const FeatureCard: FC<{
   title: string;
   features: string[];
 }> = ({ icon, title, features }) => (
-  <Card className="transition-all duration-300 hover:shadow-lg">
+  <Card className="bg-[#BFBFBF] transition-all duration-300 hover:shadow-lg">
     <CardHeader>
-      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+      <div className="h-12 w-12 rounded-full bg-[#CB3F4A]/10 flex items-center justify-center mb-4">
         {icon}
       </div>
-      <CardTitle className="text-xl">{title}</CardTitle>
+      <CardTitle className="text-xl text-[#162F44]">{title}</CardTitle>
     </CardHeader>
     <CardContent>
       <ul className="space-y-3">
         {features.map((feature, index) => (
-          <li key={index} className="flex items-center gap-2 text-muted-foreground">
-            <CheckCircle2 className="h-4 w-4 text-primary" />
+          <li key={index} className="flex items-center gap-2 text-[#697782]">
+            <ArrowRight className="h-4 w-4 text-[#CB3F4A]" />
             {feature}
           </li>
         ))}
       </ul>
     </CardContent>
   </Card>
-);
-
-const TemplateTabs: FC<{ templates: string[] }> = ({ templates }) => (
-  <Tabs defaultValue="modern" className="w-full max-w-3xl">
-    <TabsList className="grid w-full grid-cols-3">
-      {templates.map((template) => (
-        <TabsTrigger key={template} value={template.toLowerCase()}>
-          {template}
-        </TabsTrigger>
-      ))}
-    </TabsList>
-    {templates.map((template) => (
-      <TabsContent key={template} value={template.toLowerCase()}>
-        <Card>
-          <CardContent className="p-6">
-            <div className="aspect-[1366/2739] rounded-lg bg-muted flex items-center justify-center">
-              <Image src={`/assets/${template}.png`} alt={template} width={720} height={368} />
-            </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
-    ))}
-  </Tabs>
 );
 
 export default function HomePage() {
@@ -97,60 +98,42 @@ export default function HomePage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col">
-      {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center px-4 py-24 text-center bg-gradient-to-b from-background to-muted">
-        <div className="space-y-2 mb-6">
-          <Badge className="mb-4" variant="secondary">
-            100% Free & Open Source
-          </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-            Create Your Perfect Resume
+    <main className="min-h-screen flex flex-col items-center justify-center bg-[#162F44]">
+      <section className="min-h-screen flex flex-col items-center justify-center bg-[#162F44]">
+        <div className="container px-4 text-center">
+          <h1 className="text-5xl font-bold mb-6 text-white">
+            AI Resume Builder and Enhancer
           </h1>
-          <p className="text-xl text-muted-foreground max-w-[750px]">
-            Free, open-source resume builder powered by AI. No watermarks, no hidden fees.
+          <p className="text-xl mb-12 text-[#BFBFBF] max-w-2xl mx-auto">
+            Create professional resumes in minutes with our AI-powered resume builder.
+            No sign-up required, 100% free.
           </p>
-        </div>
-
-        <div className="flex flex-col sm:items-center sm:flex-row gap-4 mb-12">
-          <Link 
-            href="/resume/create" 
-            className="inline-flex items-center justify-center rounded-md bg-primary px-8 py-2 text-lg font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
-          >
-            Get Started
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Link>
-          <Button variant="outline" size="lg" onClick={scrollToTemplates}>
-            View Templates
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
-          <div>
-            <p className="text-3xl font-bold text-primary">{resumesCreated.toLocaleString()}+</p>
-            <p className="text-sm text-muted-foreground">Resumes Created</p>
-          </div>
-          <div>
-            <p className="text-3xl font-bold text-primary">100%</p>
-            <p className="text-sm text-muted-foreground">Free Forever</p>
-          </div>
-          <div>
-            <p className="text-3xl font-bold text-primary">ATS</p>
-            <p className="text-sm text-muted-foreground">Optimized</p>
-          </div>
-          <div>
-            <p className="text-3xl font-bold text-primary">MIT</p>
-            <p className="text-sm text-muted-foreground">Licensed</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/resume/create"
+              className="inline-flex items-center justify-center rounded-md bg-[#CB3F4A] hover:bg-[#CB3F4A]/90 text-white px-8 py-2 text-lg font-medium shadow transition-colors"
+            >
+              Get Started
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-[#CB3F4A] text-white hover:bg-[#CB3F4A]/10"
+              onClick={scrollToTemplates}
+            >
+              View Templates
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-24 bg-muted/50 flex flex-col items-center">
+      <section className="py-24 bg-[#162F44] flex flex-col items-center">
         <div className="container px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Why Choose ResumeItNow?</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold mb-4 text-white">Why Choose AI Resume Builder and Enhancer?</h2>
+            <p className="text-[#BFBFBF] max-w-2xl mx-auto">
               Built with modern tools and designed for everyone. Create professional resumes 
               without the hassle of watermarks or hidden fees.
             </p>
@@ -158,7 +141,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <FeatureCard
-              icon={<Layout className="h-6 w-6 text-primary" />}
+              icon={<Layout className="h-6 w-6 text-[#CB3F4A]" />}
               title="Professional Templates"
               features={[
                 "ATS-friendly designs",
@@ -168,7 +151,7 @@ export default function HomePage() {
               ]}
             />
             <FeatureCard
-              icon={<Sparkles className="h-6 w-6 text-primary" />}
+              icon={<Sparkles className="h-6 w-6 text-[#CB3F4A]" />}
               title="AI-Powered"
               features={[
                 "Smart content suggestions",
@@ -178,7 +161,7 @@ export default function HomePage() {
               ]}
             />
             <FeatureCard
-              icon={<Rocket className="h-6 w-6 text-primary" />}
+              icon={<Rocket className="h-6 w-6 text-[#CB3F4A]" />}
               title="Built for Everyone"
               features={[
                 "No sign-up required",
@@ -191,40 +174,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Templates Preview */}
-      <section ref={templatesRef} className="py-24 scroll-mt-16 flex flex-col items-center">
+      <section ref={templatesRef} className="py-24 scroll-mt-16 flex flex-col items-center bg-[#162F44]">
         <div className="container px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Professional Templates</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Choose from our collection of ATS-optimized templates designed to help you 
-              stand out while ensuring compatibility with applicant tracking systems.
+            <h2 className="text-3xl font-bold mb-4 text-white">Resume Templates</h2>
+            <p className="text-[#BFBFBF] max-w-2xl mx-auto">
+              Choose from our collection of professional templates.
             </p>
           </div>
 
           <div className="flex justify-center">
             <TemplateTabs templates={templates} />
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24 bg-primary text-primary-foreground flex flex-col items-center">
-        <div className="container px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Create Your Professional Resume?
-          </h2>
-          <p className="text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
-            Join thousands of job seekers who have successfully created their resumes using 
-            our platform. No credit card required, no hidden fees.
-          </p>
-          <Link 
-            href="/resume/create"
-            className="inline-flex items-center justify-center rounded-md bg-background text-primary px-8 py-2 text-lg font-medium shadow transition-colors hover:bg-background/90"
-          >
-            Create Your Resume Now
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Link>
         </div>
       </section>
     </main>

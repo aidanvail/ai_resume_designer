@@ -36,8 +36,28 @@ export default function SignIn() {
   }, [session, router]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <Button onClick={() => signIn("google")}>Sign in with Google</Button>
+    <div className="flex min-h-screen items-center justify-center bg-[#162F44] px-4">
+      <div className="w-full max-w-sm space-y-4 text-center">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tighter text-white sm:text-4xl md:text-5xl">
+            Welcome Back
+          </h1>
+          <p className="text-[#BFBFBF]">
+            Sign in to save and manage your resumes
+          </p>
+        </div>
+        <div className="space-y-2">
+          <Button
+            onClick={() => signIn('google')}
+            className="w-full bg-[#CB3F4A] hover:bg-[#CB3F4A]/90 text-white"
+          >
+            Sign in with Google
+          </Button>
+          <p className="text-xs text-[#697782]">
+            By signing in, you agree to our Terms of Service and Privacy Policy.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

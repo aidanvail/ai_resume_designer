@@ -2,20 +2,20 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Navbar from '../components/Navbar';
-import { ThemeWrapper } from '@/components/ThemeWrapper';
 import { getServerSession } from 'next-auth';
 import SessionProvider from '@/components/SessionProvider';
-import { Footer } from '@/components/Footer';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'ResumeItNow - Free Open Source Resume Builder',
-  description: 'Create professional, ATS-friendly resumes for free. No watermarks, no hidden fees. AI-powered resume builder with modern templates.',
+  title: 'AI Resume Builder and Enhancer - Free Open Source Resume Builder',
+  description: 'Free, open-source resume builder powered by AI. No watermarks, no hidden fees.',
   keywords: 'resume builder, cv maker, free resume, ATS-friendly resume, AI resume builder, professional templates',
   authors: [{ name: 'Mahesh Paul J' }],
-  creator: 'ResumeItNow',
-  publisher: 'ResumeItNow',
+  creator: 'AI Resume Builder and Enhancer',
+  publisher: 'AI Resume Builder and Enhancer',
   formatDetection: {
     email: false,
     address: false,
@@ -26,16 +26,16 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'ResumeItNow - Free Open Source Resume Builder',
-    description: 'Create professional, ATS-friendly resumes for free. No watermarks, no hidden fees. AI-powered resume builder with modern templates.',
+    title: 'AI Resume Builder and Enhancer - Free Open Source Resume Builder',
+    description: 'Free, open-source resume builder powered by AI. No watermarks, no hidden fees.',
     url: 'https://resumeitnow.vercel.app',
-    siteName: 'ResumeItNow',
+    siteName: 'AI Resume Builder and Enhancer',
     images: [
       {
         url: '/assets/ss.png',
         width: 1200,
         height: 630,
-        alt: 'ResumeItNow Preview',
+        alt: 'AI Resume Builder and Enhancer Preview',
       },
     ],
     locale: 'en_US',
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ResumeItNow - Free Open Source Resume Builder',
-    description: 'Create professional, ATS-friendly resumes for free. No watermarks, no hidden fees. AI-powered resume builder with modern templates.',
+    title: 'AI Resume Builder and Enhancer - Free Open Source Resume Builder',
+    description: 'Free, open-source resume builder powered by AI. No watermarks, no hidden fees.',
     images: ['/assets/ss.png'],
     creator: '@resumeitnow',
   },
@@ -88,8 +88,8 @@ export default async function RootLayout({
             __html: JSON.stringify({
               "@context": "http://schema.org",
               "@type": "WebApplication",
-              "name": "ResumeItNow",
-              "description": "Create professional, ATS-friendly resumes for free. No watermarks, no hidden fees. AI-powered resume builder with modern templates.",
+              "name": "AI Resume Builder and Enhancer",
+              "description": "Free, open-source resume builder powered by AI. No watermarks, no hidden fees.",
               "url": "https://resumeitnow.vercel.app",
               "applicationCategory": "Resume Builder",
               "operatingSystem": "Web Browser",
@@ -100,19 +100,51 @@ export default async function RootLayout({
               },
               "creator": {
                 "@type": "Organization",
-                "name": "ResumeItNow"
+                "name": "AI Resume Builder and Enhancer"
               }
             })
           }}
         />
       </head>
-      <body className={inter.className}>
+      <body className={cn("min-h-screen bg-white font-sans antialiased flex flex-col", inter.className)}>
         <SessionProvider session={session}>
-          <ThemeWrapper>
-            <Navbar />
+          <Navbar />
+          <main className="flex-grow">
             {children}
-            <Footer />
-          </ThemeWrapper>
+          </main>
+          <footer className="w-full py-4 text-center text-sm text-gray-600">
+            <div className="mb-4">
+              <p className="mb-2">A Product of the AdVentus Group. Designed by</p>
+              <a 
+                href="https://adventusgroup.co.za" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src="https://i.imgur.com/WcoVQrI.png"
+                  alt="AdVentus Logo"
+                  width={120}
+                  height={40}
+                  className="mx-auto"
+                  priority={false}
+                />
+              </a>
+            </div>
+            <div className="text-xs">
+              <p>&copy; 2025 AI Resume Builder. All rights reserved.</p>
+              <p>
+                <a 
+                  href="/LICENSE"
+                  className="text-[#CB3F4A] hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  MIT License
+                </a>
+              </p>
+            </div>
+          </footer>
         </SessionProvider>
       </body>
     </html>

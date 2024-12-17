@@ -1,58 +1,97 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import StepForm from '@/components/resume-builder/StepForm';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { useState } from "react";
+import StepForm from '@/components/resume-builder/StepForm';
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { v4 as uuidv4 } from "uuid";
 
-export default function ResumeBuilderPage() {
-  const { data: session, status } = useSession();
+export default function CreateResume() {
   const router = useRouter();
-  const [proceedWithoutSignIn, setProceedWithoutSignIn] = useState(false);
+  const { data: session } = useSession();
+  const [showSignInAlert, setShowSignInAlert] = useState(true);
 
-  if (status === "loading") {
-    return <div>Loading...</div>; // Optional loading spinner
-  }
+  const createResume = async () => {
+    if (!session?.user?.email) return;
 
-  // If the user is not signed in and hasn't chosen to proceed
-  if (!session && !proceedWithoutSignIn) {
-    return (
-      <div className="container min-h-screen mx-auto py-10 px-4 max-w-3xl">
-        <Alert variant="destructive" className="mb-8">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>You are not signed in</AlertTitle>
-          <AlertDescription className="mt-2">
-            If you continue, your resume will not be saved&#40;you can create
-            and download the resume but your resume won&apos;t be saved anywhere, so you might lose it.&#41; Sign In to save your resumes and download/edit them any time!
-          </AlertDescription>
-          <Button
-            variant="outline"
-            className="mt-4 mr-2"
-            onClick={() => router.push('/signin')}
-            size="lg"
-          >
-            Sign In
-          </Button>
-          <Button
-            variant="outline"
-            className="mt-4"
-            onClick={() => setProceedWithoutSignIn(true)}
-            size="lg"
-          >
-            Continue without Signing In
-          </Button>
-        </Alert>
-      </div>
-    );
-  }
+    const resumeId = uuidv4();
+    const resumeRef = doc(db, "resumes", resumeId);
 
-  // If the user is signed in or chose to proceed without signing in
+    await setDoc(resumeRef, {
+      id: resumeId,
+      userId: session.user.email,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      data: {},
+    });
+
+    router.push(`/resume/${resumeId}`);
+  };
+
+  useEffect(() => {
+    if (!session) {
+      setShowSignInAlert(true);
+    }
+  }, [session]);
+
   return (
-    <div className="min-h-screen">
-      <StepForm />
+    <div className="min-h-screen bg-[#162F44]">
+      {!session && showSignInAlert ? (
+        <div className="max-w-xl mx-auto p-6">
+          <Alert className="bg-[#BFBFBF] border-[#CB3F4A] mb-6">
+            <AlertCircle className="h-4 w-4 text-[#CB3F4A]" />
+            <AlertTitle className="text-[#162F44] font-bold">Not signed in</AlertTitle>
+            <AlertDescription className="text-[#697782]">
+              You're not signed in. Your resume won't be saved unless you sign in.
+            </AlertDescription>
+          </Alert>
+          <div className="flex gap-4">
+            <Button
+              onClick={() => router.push('/signin')}
+              className="flex-1 bg-[#CB3F4A] hover:bg-[#CB3F4A]/90 text-white !important"
+            >
+              Sign in to save your progress
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowSignInAlert(false)}
+              className="flex-1 border-[#CB3F4A] text-white hover:bg-[#CB3F4A]/10"
+            >
+              Continue anyway
+            </Button>
+          </div>
+        </div>
+      ) : null}
+      
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex min-h-screen items-center justify-center bg-[#162F44] px-4">
+          <div className="w-full max-w-md space-y-8 text-center">
+            <div className="space-y-4">
+              <h1 className="text-4xl font-bold tracking-tighter text-white">
+                Create Your Resume
+              </h1>
+              <p className="text-[#BFBFBF]">
+                Start building your professional resume with our AI-powered tools
+              </p>
+            </div>
+            <Button
+              onClick={createResume}
+              className="w-full bg-[#CB3F4A] hover:bg-[#CB3F4A]/90 text-white !important py-6 text-lg"
+            >
+              Create New Resume
+            </Button>
+            <p className="text-sm text-[#697782]">
+              Your resume will be saved automatically as you type
+            </p>
+            <StepForm />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
