@@ -301,69 +301,62 @@ export default function StepForm() {
   return (
     <main className="container mx-auto py-10 px-4 md:px-6">
       <div className="max-w-3xl mx-auto">
-        {/* Progress bar with step headings */}
-        <div className="mb-8 max-md:hidden">
-          <div className="flex justify-between items-center mb-4 ">
-            {steps.map((stepInfo, index) => (
-              <div
-                key={index}
-                className={`flex flex-col items-center w-full ${
-                  index !== steps.length - 1 ? "pr-2" : ""
-                }`}
-              >
-                {/* Step circle */}
-                <div
-                  className={`h-8 w-8 flex items-center justify-center rounded-full text-foreground font-bold ${
-                    index < step
-                      ? "bg-primary text-secondary"
-                      : index === step
-                      ? "bg-none border-2 border-foreground"
-                      : "bg-secondary"
-                  }`}
-                >
-                  {index + 1}
-                </div>
-                {/* Step title */}
-                <p
-                  className={`text-xs mt-2 ${
-                    index === step
-                      ? "text-primary font-semibold text-center"
-                      : "text-accent-foreground"
-                  }`}
-                >
-                  {stepInfo.title}
-                </p>
-              </div>
-            ))}
-          </div>
-          {/* Connecting progress lines */}
+        {/* Progress Slider */}
+        <div className="mb-12">
           <div className="relative">
-            <div className="absolute top-1/2 transform -translate-y-1/2 h-1 w-full bg-accent rounded"></div>
-            <div
-              className="absolute top-1/2 transform -translate-y-1/2 h-1 bg-primary rounded transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
-        {/* Progress bar */}
-        <div className="mb-8 hidden max-md:block">
-          <div className="h-2 w-full bg-gray-200 dark:bg-border rounded-full">
-            <div 
-              className="h-full bg-primary rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <div className="mt-2 text-sm text-gray-600 text-center">
-            Step {step + 1} of {steps.length}
+            {/* Progress bar */}
+            <div className="h-1 w-full bg-[#E5E7EB] rounded-full">
+              <div
+                className="h-full bg-[#CB3F4A] rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+
+            {/* Step markers */}
+            <div className="absolute top-0 left-0 w-full flex justify-between -mt-2">
+              {steps.map((stepInfo, index) => {
+                const isCompleted = index < step;
+                const isCurrent = index === step;
+                const stepPosition = (index / (steps.length - 1)) * 100;
+                
+                return (
+                  <div
+                    key={index}
+                    className="relative"
+                    style={{ left: `${stepPosition}%`, transform: 'translateX(-50%)' }}
+                  >
+                    {/* Step marker */}
+                    <div
+                      className={`w-5 h-5 rounded-full border-2 transition-all duration-300 ${
+                        isCompleted
+                          ? "bg-[#CB3F4A] border-[#CB3F4A]"
+                          : isCurrent
+                          ? "bg-white border-[#CB3F4A]"
+                          : "bg-white border-[#E5E7EB]"
+                      }`}
+                    />
+                    
+                    {/* Step label */}
+                    <div className="absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                      <span
+                        className={`text-xs font-medium ${
+                          isCurrent ? "text-[#CB3F4A]" : "text-gray-500"
+                        }`}
+                      >
+                        {stepInfo.title}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
-        <Card className="p-6">
-          <h1 className="text-3xl font-bold mb-6">{steps[step].title}</h1>
-          
+        <Card className="p-8">
+          <h1 className="text-2xl font-bold mb-6 text-gray-900">{steps[step].title}</h1>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {renderStep()}
-            
             <NavigationButtons
               step={step}
               totalSteps={steps.length}

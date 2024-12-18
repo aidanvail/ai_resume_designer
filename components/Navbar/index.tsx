@@ -33,8 +33,9 @@ interface NavLink {
 
 const navLinks: NavLink[] = [
   { title: 'Home', href: '/' },
-  { title: 'About', href: '/about' },
-  { title: 'Create', href: '/resume/create' },
+ 
+ 
+  
 ];
 
 export default function Navbar() {
@@ -54,6 +55,9 @@ export default function Navbar() {
     });
   }, [session]);
 
+  // Check if we're in the resume builder
+  const isResumeBuilder = typeof window !== 'undefined' && window.location.pathname.includes('/resume-builder');
+
   if (!mounted) return null;
 
   const handleSignOut = async () => {
@@ -62,80 +66,77 @@ export default function Navbar() {
     router.push('/');
   };
 
-  const UserMenu = () => (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="w-full md:w-auto">
-          {settings.displayName || session?.user?.name || 'User'}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('/profile')}>
-            Profile
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('/settings')}>
-            Settings
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-red-400 cursor-pointer" onClick={handleSignOut}>
-          Logout
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+  // If we're in the resume builder, show a minimal navbar
+  if (isResumeBuilder) {
+    return (
+      <header className="fixed top-4 right-4 z-50">
+        <div className="flex items-center gap-2">
+          <ThemeSwitch />
+          {session ? (
+            <UserMenu />
+          ) : (
+            <Button variant="outline" onClick={() => signIn()}>
+              Sign In
+            </Button>
+          )}
+        </div>
+      </header>
+    );
+  }
 
-  const MobileMenu = () => (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden">
-          <Menu className="h-5 w-5" />
-          <span className="sr-only">Toggle menu</span>
-        </Button>
-      </SheetTrigger>
-      <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-        <nav className="flex flex-col gap-4">
-          {navLinks.map((link) => (
+  // Regular navbar for other pages
+  return (
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 items-center justify-between">
+        <nav className="flex items-center gap-6">
+          {navLinks.map((link, index) => (
             <Button
-              key={link.href}
+              key={index}
               variant="ghost"
-              className="w-full justify-start"
               onClick={() => router.push(link.href)}
             >
               {link.title}
             </Button>
           ))}
-          <div className="mt-4">
-            {session ? (
-              <UserMenu />
-            ) : (
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => router.push('/signin')}
-              >
-                Sign In
-              </Button>
-            )}
-          </div>
         </nav>
-      </SheetContent>
-    </Sheet>
-  );
 
-  return (
-    <div className="fixed top-4 right-4 z-50">
-      {!session ? (
-        <Button
-          onClick={() => signIn('google')}
-          className="bg-[#CB3F4A] hover:bg-[#CB3F4A]/90 text-white"
-        >
-          Sign In
-        </Button>
-      ) : null}
-    </div>
+        <div className="flex items-center gap-2">
+          <ThemeSwitch />
+          {session ? (
+            <UserMenu />
+          ) : (
+            <Button variant="outline" onClick={() => signIn()}>
+              Sign In
+            </Button>
+          )}
+        </div>
+      </div>
+    </header>
   );
 }
+
+const UserMenu = () => (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="outline" className="w-full md:w-auto">
+        {settings.displayName || session?.user?.name || 'User'}
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent className="w-56">
+      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuGroup>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('/profile')}>
+          Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('/settings')}>
+          Settings
+        </DropdownMenuItem>
+      </DropdownMenuGroup>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem className="text-red-400 cursor-pointer" onClick={handleSignOut}>
+        Logout
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+);
