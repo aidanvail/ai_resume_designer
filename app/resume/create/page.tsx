@@ -47,7 +47,7 @@ export default function CreateResume() {
             <AlertCircle className="h-4 w-4 text-[#CB3F4A]" />
             <AlertTitle className="text-[#162F44] font-bold">Not signed in</AlertTitle>
             <AlertDescription className="text-[#697782]">
-              You're not signed in. Your resume won't be saved unless you sign in.
+              You&apos;re not signed in. Your resume won&apos;t be saved unless you sign in.
             </AlertDescription>
           </Alert>
           <div className="flex gap-4">
