@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -20,6 +21,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import router from 'next/router';
 
 interface Settings {
   displayName: string | null | undefined;
@@ -140,3 +142,7 @@ const UserMenu = () => (
     </DropdownMenuContent>
   </DropdownMenu>
 );
+
+function handleSignOut(event: React.MouseEvent<HTMLDivElement>): void {
+  throw new Error('Function not implemented.');
+}
