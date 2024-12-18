@@ -1,9 +1,4 @@
-"scripts": {
-  "dev": "next dev",
-  "build": "next build",
-  "start": "next start",
-  "lint": "next lint"
-}
+{
   "name": "ai-resume-builder-and-enhancer",
   "version": "0.2.0",
   "private": true,
@@ -34,31 +29,29 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
-    "firebase": "^10.14.1",
-    "html2pdf.js": "^0.9.3",
-    "lucide-react": "^0.453.0",
-    "next": "14.2.15",
-    "next-auth": "^4.24.8",
-    "next-themes": "^0.3.0",
-    "react": "^18",
-    "react-day-picker": "^8.10.1",
-    "react-dom": "^18",
-    "react-hook-form": "^7.53.1",
-    "react-icons": "^5.3.0",
-    "tailwind-merge": "^2.5.4",
+    "firebase": "^10.7.1",
+    "lucide-react": "^0.303.0",
+    "next": "14.0.4",
+    "next-auth": "^4.24.5",
+    "next-themes": "^0.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.49.2",
+    "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.15",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "@types/uuid": "^10.0.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.15",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.0.4",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3"
   }
 }
