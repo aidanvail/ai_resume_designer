@@ -122,7 +122,7 @@ export default async function RootLayout({
                 className="inline-block hover:opacity-80 transition-opacity"
               >
                 <Image
-                  src="https://i.imgur.com/WcoVQrI.png"
+                  src="https://imgur.com/oYEfuti"
                   alt="AdVentus Logo"
                   width={120}
                   height={40}
