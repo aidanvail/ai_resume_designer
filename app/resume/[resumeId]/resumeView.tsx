@@ -22,9 +22,6 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
-// 1) Remove the top-level import
-// import html2pdf from 'html2pdf.js';
-
 // Template components mapping
 const TEMPLATES = {
   modern: ModernTemplate,
@@ -62,7 +59,7 @@ export default function ResumeView({
       return;
     }
 
-    // 2) Dynamically import html2pdf.js inside the download handler
+    // Dynamically import html2pdf.js so that it is loaded only on the client
     const html2pdfModule = await import('html2pdf.js');
     const html2pdf = html2pdfModule.default;
   
@@ -71,8 +68,8 @@ export default function ResumeView({
       filename: `${resumeData.personalDetails.fullName}'s Resume_made using ResumeItNow.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas:  { 
-        useCORS: true,  // Handles cross-origin images
-        logging: false  // Reduces console logging
+        useCORS: true,
+        logging: false
       },
       jsPDF:{ 
         unit: 'mm', 
@@ -91,7 +88,6 @@ export default function ResumeView({
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function flattenObject(obj: any, parentKey = ''): { [key: string]: any } {
     return Object.keys(obj).reduce((acc, key) => {
       const newKey = parentKey ? `${parentKey}.${key}` : key;
@@ -162,7 +158,6 @@ export default function ResumeView({
         }
         return prev;
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const sectionArray = [...prev[section] as any[]];
       sectionArray[index] = { 
         ...sectionArray[index], 
@@ -176,16 +171,13 @@ export default function ResumeView({
     });
   };
 
-  // Get the current template component
   const TemplateComponent = TEMPLATES[selectedTemplate];
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-950 py-4 px-4 sm:px-0">
       <Card className="max-w-[21cm] mx-auto mb-4">
         <CardContent className="p-4">
-          {/* Stack controls vertically on mobile, horizontally on larger screens */}
           <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:justify-between sm:items-center">
-            {/* Template and Download controls */}
             <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4 sm:items-center">
               <Select
                 value={selectedTemplate}
@@ -212,7 +204,6 @@ export default function ResumeView({
               </Button>
             </div>
 
-            {/* Edit/Save controls */}
             <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
               {isEditing ? (
                 <>
@@ -262,7 +253,6 @@ export default function ResumeView({
         </div>
       </div>
 
-      {/* Print Styles */}
       <style jsx global>{`
         @media print {
           @page {
