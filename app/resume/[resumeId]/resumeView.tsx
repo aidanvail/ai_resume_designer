@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Download, Edit, Save, X } from 'lucide-react';
@@ -21,9 +20,7 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card";
-
-// Removed: import html2pdf from 'html2pdf.js';
-
+import html2pdf from 'html2pdf.js';
 
 // Template components mapping
 const TEMPLATES = {
@@ -62,17 +59,13 @@ export default function ResumeView({
       return;
     }
   
-    // Dynamically import html2pdf.js (only in the client)
-    const html2pdfModule = await import('html2pdf.js');
-    const html2pdf = html2pdfModule.default;
-  
     const opt = {
       margin: [5.2, 4.5, 5.5, 4.5],
-      filename: `${resumeData.personalDetails.fullName}'s Resume_made using ResumeItNow.pdf`,
+      filename: ${resumeData.personalDetails.fullName}'s Resume_made using ResumeItNow.pdf,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas:  { 
-        useCORS: true,
-        logging: false
+        useCORS: true,  // Handles cross-origin images
+        logging: false  // Reduces console logging
       },
       jsPDF:{ 
         unit: 'mm', 
@@ -83,7 +76,9 @@ export default function ResumeView({
     };
   
     try {
+      // Generate and save PDF
       await html2pdf().set(opt).from(element).save();
+
     } catch (error) {
       console.error('PDF generation failed:', error);
       alert('Failed to download PDF. Please try again.');
@@ -93,7 +88,7 @@ export default function ResumeView({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function flattenObject(obj: any, parentKey = ''): { [key: string]: any } {
     return Object.keys(obj).reduce((acc, key) => {
-      const newKey = parentKey ? `${parentKey}.${key}` : key;
+      const newKey = parentKey ? ${parentKey}.${key} : key;
       
       if (Array.isArray(obj[key])) {
         return {
@@ -120,7 +115,7 @@ export default function ResumeView({
       const userEmail = session?.user?.email;
       if (!userEmail) throw new Error('User email not found');
       
-      const resumeRef = doc(db, `users/${userEmail}/resumes/${resumeId}`);
+      const resumeRef = doc(db, users/${userEmail}/resumes/${resumeId});
       const flattenedData = flattenObject({
         ...resumeData,
         template: selectedTemplate // Save the selected template
@@ -251,18 +246,18 @@ export default function ResumeView({
         </CardContent>
       </Card>
 
-      <div className="flex justify-self-center max-w-[21cm] bg-white shadow-lg pt-8 print:shadow-none">
+      <div className='flex justify-self-center max-w-[21cm] bg-white shadow-lg pt-8 print:shadow-none'>
         <div id="resume-content">
           <TemplateComponent 
             resumeData={resumeData}
             isEditing={isEditing}
             updateField={updateField}
-          />
+            />
         </div>
       </div>
 
       {/* Print Styles */}
-      <style jsx global>{`
+      <style jsx global>{
         @media print {
           @page {
             margin: 0.5cm;
@@ -292,7 +287,7 @@ export default function ResumeView({
             color: #2563eb !important;
           }
         }
-      `}</style>
+      }</style>
     </div>
   );
 }
