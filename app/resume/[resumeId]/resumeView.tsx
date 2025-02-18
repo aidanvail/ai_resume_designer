@@ -21,7 +21,9 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card";
-import html2pdf from 'html2pdf.js';
+
+// 1) Remove the top-level import
+// import html2pdf from 'html2pdf.js';
 
 // Template components mapping
 const TEMPLATES = {
@@ -59,6 +61,10 @@ export default function ResumeView({
       console.error('Resume content element not found');
       return;
     }
+
+    // 2) Dynamically import html2pdf.js inside the download handler
+    const html2pdfModule = await import('html2pdf.js');
+    const html2pdf = html2pdfModule.default;
   
     const opt = {
       margin: [5.2, 4.5, 5.5, 4.5],
@@ -79,7 +85,6 @@ export default function ResumeView({
     try {
       // Generate and save PDF
       await html2pdf().set(opt).from(element).save();
-
     } catch (error) {
       console.error('PDF generation failed:', error);
       alert('Failed to download PDF. Please try again.');
